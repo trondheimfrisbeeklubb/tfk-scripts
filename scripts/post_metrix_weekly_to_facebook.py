@@ -100,9 +100,10 @@ def find_event_for_tomorrow(events):
     dict or None
         Ordet runde-objekt hvis funnet, ellers None.
     """
-    tomorrow = (datetime.now() + timedelta(days=1)).date()
+    today = datetime.now().date()
+    tomorrow = today + timedelta(days=1)
     for ev in events:
-        if ev["datetime"].date() == tomorrow:
+        if ev["datetime"].date() in {today, tomorrow}:
             return ev
     return None
 
