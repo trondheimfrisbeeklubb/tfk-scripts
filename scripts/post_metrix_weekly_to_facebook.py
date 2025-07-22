@@ -16,12 +16,21 @@ import requests
 from bs4 import BeautifulSoup
 from datetime import datetime, timedelta
 from urllib.parse import urljoin
-import locale
 import logging
 import os
 
-# Norsk lokalitet for korrekt datoformat
-locale.setlocale(locale.LC_TIME, "nb_NO.UTF-8")
+# Norsk lokalitet for korrekt datoformat (Norsk locale ikke støttet i Github Actions)
+NORWEGIAN_WEEKDAYS = {
+    "Monday": "mandag", "Tuesday": "tirsdag", "Wednesday": "onsdag",
+    "Thursday": "torsdag", "Friday": "fredag", "Saturday": "lørdag", "Sunday": "søndag"
+}
+
+NORWEGIAN_MONTHS = {
+    "January": "januar", "February": "februar", "March": "mars", "April": "april",
+    "May": "mai", "June": "juni", "July": "juli", "August": "august",
+    "September": "september", "October": "oktober", "November": "november", "December": "desember"
+}
+
 
 SERIES_URL = "https://discgolfmetrix.com/3272824&view=info"  # 2025 TFK Seriespill
 HEADERS = {
@@ -168,7 +177,10 @@ def format_event_post(event: dict) -> str:
     str
         Ferdig formattert Facebook-melding.
     """
-    dt_str = event["datetime"].strftime("%A %d. %B %Y kl. %H:%M").capitalize()
+    dt = event["datetime"]
+    weekday = NORWEGIAN_WEEKDAYS[dt.strftime("%A")]
+    month = NORWEGIAN_MONTHS[dt.strftime("%B")]
+    dt_str = f"{weekday.capitalize()} {dt.day:02d}. {month} {dt.year} kl. {dt.strftime('%H:%M')}"
 
     return (
         f"📣 Neste runde i TFK Seriespill nærmer seg!\n\n"
