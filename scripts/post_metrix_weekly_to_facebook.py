@@ -103,7 +103,7 @@ def find_event_for_tomorrow(events):
     today = datetime.now().date()
     tomorrow = today + timedelta(days=1)
     for ev in events:
-        if ev["datetime"].date() in {today, tomorrow}:
+        if ev["datetime"].date() in {tomorrow}:
             return ev
     return None
 
